@@ -13,7 +13,16 @@ It is a Claude Code skill plugin that gives Claude the full GitHub Copilot CLI r
 
 The way it should work.
 
-## Get it
+## Get started
+
+Before installing, make sure you have the [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli) set up. It is a standalone tool — not the same as `gh copilot`:
+
+```bash
+brew install copilot-cli
+copilot login
+```
+
+Then install CoFluent from inside Claude Code:
 
 ```
 /plugin marketplace add namos2502/agent-plugins
@@ -21,9 +30,7 @@ The way it should work.
 /reload-plugins
 ```
 
-> Requires Claude Code v1.0.33+ and the [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli).
-> Install it with `brew install copilot-cli` then `copilot login`.
-> Note: `copilot` is not the same as `gh copilot` — different tool entirely.
+Requires Claude Code v1.0.33+.
 
 ## Commands
 
@@ -42,19 +49,19 @@ The way it should work.
 
 **Hands-off** — run `/cofluent:auto` once and let Claude decide when to reach for Copilot. Good for longer sessions where you just want things to work.
 
-**Hands-on** — use explicit commands when you want to point Claude at a specific task. You stay in control of every delegation.
+**Hands-on** — use individual commands to point Claude at a specific task. You stay in control of every delegation.
 
-## How it works
+## Under the hood
 
-There is a single skill file — `skills/copilot-cli/SKILL.md` — that Claude loads as its Copilot CLI reference manual. It covers the right flags for non-interactive use, how to scope tool permissions, which model fits which task, and ready-to-run patterns.
+CoFluent ships a single skill file — `skills/copilot-cli/SKILL.md` — that Claude loads as its Copilot CLI reference. It covers the right flags for non-interactive use, tool permissions, model selection, and ready-to-run invocation patterns.
 
-The short version of what Claude learns:
+The base pattern Claude always follows:
 
 ```bash
 copilot -p "..." -s --no-ask-user --no-auto-update --no-color --allow-tool='read'
 ```
 
-Full reference lives in the [official docs](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-programmatic-reference).
+Full flag reference in the [official docs](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-programmatic-reference).
 
 ## License
 
