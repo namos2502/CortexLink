@@ -9,7 +9,7 @@ You know the feeling. You are deep in a vibe coding session — ideas flowing, C
 
 CoFluent fixes that.
 
-It is a Claude Code skill plugin that gives Claude the full GitHub Copilot CLI reference — flags, permissions, patterns, model choices — baked right in. Install it once, and Claude already knows how to speak Copilot. No interruptions, no setup tax, no context switching. You stay in the zone and Claude handles the handoff.
+Introducing **CoFluent** (copilot-fluent) — a cross-agent workflow plugin for Claude Code. It gives Claude the full GitHub Copilot CLI reference — flags, permissions, patterns, model choices — baked right in. Install it once, and Claude already knows how to speak Copilot. No interruptions, no setup tax, no context switching. You stay in the zone and Claude handles the handoff.
 
 The way it should work.
 
