@@ -71,7 +71,7 @@ Once installed, the following commands are available inside Claude Code:
 
 The core of CoFluent is `skills/copilot-cli/SKILL.md` — a structured reference that Claude loads automatically when working with the Copilot CLI. It provides the correct flags, tool permission syntax, and invocation patterns for programmatic use.
 
-### Programmatic flags
+### Programmatic flags — [official reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-programmatic-reference)
 
 | Flag | Purpose |
 |------|---------|
