@@ -18,7 +18,7 @@ After installing, Claude knows:
 
 ## Requirements
 
-- **Claude Code** v1.0.33+ — [Install guide](https://docs.anthropic.com/en/docs/claude-code)
+- **Claude Code** v2.1.77+ — [Install guide](https://docs.anthropic.com/en/docs/claude-code)
 - **GitHub Copilot CLI** — installed and authenticated
 
 > ⚠️ The Copilot CLI (`copilot`) is **not** the same as `gh copilot`. It is a separate tool installed via Homebrew:
