@@ -37,20 +37,19 @@ claude --version   # requires v1.0.33+
 
 ## Installation
 
-**From GitHub (recommended):**
-
+**Step 1 — Add the marketplace:**
 ```bash
-claude plugin install https://github.com/namos2502/CoFluent
+/plugin marketplace add namos2502/agent-plugins
 ```
 
-**From a local clone:**
-
+**Step 2 — Install CoFluent:**
 ```bash
-git clone https://github.com/namos2502/CoFluent
-claude plugin install ./CoFluent
+/plugin install cofluent@agent-plugins
 ```
 
-After installing, run `/reload-plugins` inside Claude Code to activate.
+**Step 3 — Activate:**
+
+Run `/reload-plugins` inside Claude Code.
 
 ## Slash commands
 
