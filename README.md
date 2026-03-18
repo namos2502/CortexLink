@@ -1,6 +1,6 @@
 # CoFluent
 
-> A Claude Code plugin that teaches Claude the GitHub Copilot CLI programmatic flags — so it can invoke `copilot -p` correctly every time.
+> A Claude Code plugin that teaches Claude the GitHub Copilot CLI programmatic flags
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-namos2502%2FCoFluent-181717?logo=github)](https://github.com/namos2502/CoFluent)
