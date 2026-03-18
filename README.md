@@ -13,6 +13,12 @@ Introducing **CoFluent** (copilot-fluent) — a cross-agent workflow plugin for 
 
 The way it should work.
 
+## Why CoFluent
+
+**Stay in flow.** No context switching, no flag hunting, no setup tax. Claude already knows the full Copilot CLI programmatic reference — flags, permissions, model choices — baked right in.
+
+**Save tokens on Claude.** Every task you delegate to Copilot runs in a separate `copilot -p` process. Only the final answer comes back into Claude's context window — not the reasoning chain, not the tool calls, not the intermediate output. This keeps Claude's context lean, reduces token consumption per session, and stretches your quota further.
+
 ## Get started
 
 Before installing, make sure you have the [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli) set up. It is a standalone tool — not the same as `gh copilot`:
@@ -30,14 +36,22 @@ Then install CoFluent from inside Claude Code:
 /reload-plugins
 ```
 
+Then run setup once:
+
+```
+/cofluent:setup
+```
+
+This verifies Copilot CLI is installed and authenticated, and registers CoFluent awareness in your `~/.claude/CLAUDE.md` so Claude knows about it in every future session.
+
 Requires Claude Code v1.0.33+.
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
+| `/cofluent:setup` | One-time setup — verifies install, authenticates, and registers CoFluent in your `~/.claude/CLAUDE.md` |
 | `/cofluent:auto` | Activates copilot-aware mode — Claude handles `copilot -p` calls on its own |
-| `/cofluent:verify` | Checks everything is installed and you are logged in |
 | `/cofluent:ask` | Asks Copilot a question |
 | `/cofluent:suggest` | Gets a shell command for a task |
 | `/cofluent:explain` | Explains a command, error, or snippet |

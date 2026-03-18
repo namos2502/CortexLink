@@ -2,6 +2,17 @@
 
 All notable changes to CoFluent will be documented here.
 
+## [1.0.1] — 2026-03-18
+
+### Added
+- `/cofluent:setup` — one-time setup command that verifies Copilot CLI is installed and authenticated, then registers CoFluent awareness in `~/.claude/CLAUDE.md` so Claude knows about CoFluent in every future session (idempotent — safe to re-run)
+- `## Why CoFluent` section in README covering two key benefits: staying in flow and saving tokens on Claude by offloading subtasks to a separate `copilot -p` process
+
+### Removed
+- `/cofluent:verify` — absorbed into `/cofluent:setup`; re-run setup anytime to re-check your installation
+
+---
+
 ## [1.0.0-beta] — 2026-03-18
 
 Initial beta release. Core plugin structure is stable; commands and skill reference are functional but may evolve based on feedback.
