@@ -1,7 +1,7 @@
 ---
-name: Claude CLI Agent
+name: claude-cli
 description: Behavioral reference for Claude CLI. Use when delegating general code tasks, analysis, or tasks requiring Anthropic-native reasoning via `claude -p`.
-when_to_use: when delegating to Claude CLI — see skills/orchestration/SKILL.md for routing decision
+
 ---
 
 # Claude CLI Agent
