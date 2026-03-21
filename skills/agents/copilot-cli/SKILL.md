@@ -2,7 +2,7 @@
 name: Copilot CLI Agent
 description: Behavioral reference for GitHub Copilot CLI. Use when delegating GitHub-specific or GitHub-adjacent tasks via `copilot -p`.
 when_to_use: when delegating to Copilot CLI — see skills/orchestration/SKILL.md for routing decision
-version: 3.0.0
+version: 3.1.0
 ---
 
 # Copilot CLI Agent
@@ -23,9 +23,9 @@ version: 3.0.0
 
 | Flag | Purpose |
 |------|---------|
-| `-p "PROMPT"` | Non-interactive mode — exits when done |
-| `-s` | Silent — suppress decoration, output only the response |
-| `--no-ask-user` | Prevent agent from pausing to ask questions |
+| `-p "PROMPT"` | Programmatic mode — executes prompt and exits |
+| `-s` | Silent — output only the agent response (no usage stats) |
+| `--no-ask-user` | Agent works autonomously, no questions |
 | `--no-auto-update` | Suppress update checks |
 | `--no-color` | Plain text output |
 
@@ -33,31 +33,45 @@ Always combine `-s --no-ask-user --no-auto-update --no-color` for clean programm
 
 ## Tool Permissions (`--allow-tool`)
 
-| Use case | Flag |
-|----------|------|
-| Read-only (questions, analysis) | `--allow-tool='read'` |
-| Read + write files | `--allow-tool='write, read'` |
-| Read + write + git | `--allow-tool='write, shell(git:*), read'` |
-| Read + write + git + npm | `--allow-tool='write, shell(git:*), shell(npm run:*), read'` |
+Pre-approves tools so the agent doesn't pause to prompt. **Default to read-only. Only escalate with a clear reason.**
 
-Use the narrowest permission set that gets the job done.
+| Level | Use case | Flag |
+|-------|----------|------|
+| ✅ Default | Questions, analysis, review | `--allow-tool='read'` |
+| ⚠️ Escalate | Needs to modify files | `--allow-tool='write, read'` |
+| 🔴 Escalate + shell | Needs to run git commands | `--allow-tool='write, shell(git:*), read'` |
+
+Shell access (`shell(...)`) is a separate, deliberate decision — not an automatic addition to write access. Only grant it when the task genuinely requires running commands.
+
+Use `--deny-tool` to block specific commands within an allowed scope:
+```bash
+# Allow git reads but block pushes
+--allow-tool='shell(git:*), read' --deny-tool='shell(git push)'
+```
+Deny rules always override allow rules.
 
 ## Model Selection
 
-| Task | Model |
+| Task | Flag |
 |------|-------|
 | Quick question, analysis | `--model=claude-haiku-4.5` |
-| Complex fix, multi-step | omit (defaults to Opus) |
+| Complex fix, multi-step | omit (uses session default) |
 
 ## Invocation Patterns
 
-**Read-only delegation (question, analysis, review):**
+**Read-only delegation (question, analysis):**
 ```bash
 copilot -p "[delegation prompt]" -s --no-ask-user --no-auto-update --no-color \
   --allow-tool='read' --model=claude-haiku-4.5
 ```
 
 **Write delegation (fix, implement):**
+```bash
+copilot -p "[delegation prompt]" -s --no-ask-user --no-auto-update --no-color \
+  --allow-tool='write, read'
+```
+
+**Write delegation + git (runs git commands):**
 ```bash
 copilot -p "[delegation prompt]" -s --no-ask-user --no-auto-update --no-color \
   --allow-tool='write, shell(git:*), read'

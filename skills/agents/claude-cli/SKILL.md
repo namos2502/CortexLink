@@ -2,7 +2,7 @@
 name: Claude CLI Agent
 description: Behavioral reference for Claude CLI. Use when delegating general code tasks, analysis, or tasks requiring Anthropic-native reasoning via `claude -p`.
 when_to_use: when delegating to Claude CLI — see skills/orchestration/SKILL.md for routing decision
-version: 3.0.0
+version: 3.1.0
 ---
 
 # Claude CLI Agent
@@ -27,45 +27,46 @@ version: 3.0.0
 | `-p "PROMPT"` | Print mode — non-interactive, exits when done |
 | `--output-format text` | Plain text output (default — easiest to parse) |
 | `--output-format json` | Structured JSON with metadata |
-| `--no-session-persistence` | Do not save to disk — keeps scripted calls clean |
+| `--no-session-persistence` | Do not save session to disk — keeps scripted calls clean |
 | `--max-turns N` | Cap agentic turns — prevents runaway tasks |
 
 ## Tool Permissions
 
-### `--allowedTools` — whitelist (no prompting)
+**Default to read-only. Only escalate with a clear reason.**
 
-| Use case | Flag |
-|----------|------|
-| Read-only | `--allowedTools "Read"` |
-| Read + write | `--allowedTools "Read" "Edit" "Write"` |
-| Read + write + git | `--allowedTools "Read" "Edit" "Bash(git *)"` |
-| Read + write + git + npm | `--allowedTools "Read" "Edit" "Bash(git *)" "Bash(npm run:*)"` |
+| Flag | Purpose |
+|------|---------|
+| `--allowedTools "TOOL"` | Tools that auto-execute without a permission prompt |
+| `--disallowedTools "TOOL"` | Tools removed from the model's context entirely |
 
-### `--disallowedTools` — blacklist
+| Level | Use case | Flags |
+|-------|----------|-------|
+| ✅ Default | Questions, analysis | `--allowedTools "Read"` |
+| ⚠️ Escalate | Needs to modify files | `--allowedTools "Read" "Edit"` |
+| 🔴 Escalate + shell | Needs to run commands | `--allowedTools "Read" "Edit" "Bash(git *)"` |
+| 🔴 Explicit block | Ensure no shell runs | `--disallowedTools "Bash"` |
 
-| Use case | Flag |
-|----------|------|
-| No shell | `--disallowedTools "Bash"` |
-| No writes | `--disallowedTools "Edit" "Write"` |
+`"Edit"` modifies existing files. `"Write"` creates new files — only add it if the task explicitly needs to create files.
 
-## Model Selection
-
-| Task | Model |
-|------|-------|
-| Quick question, analysis | `--model claude-haiku-4-5` |
-| Complex fix, multi-step | `--model sonnet` |
-| Highest quality reasoning | `--model opus` |
-
-Use short aliases (`sonnet`, `opus`) for latest versions, or full IDs (e.g. `claude-sonnet-4-6`) to pin.
+Shell access (`Bash(...)`) is a separate, deliberate decision. When in doubt, use `--disallowedTools "Bash"` to prevent any shell execution, even if the model tries.
 
 ## Safety Flags
 
 | Flag | Purpose |
 |------|---------|
-| `--max-turns N` | Stop after N agentic turns |
 | `--max-budget-usd N` | Cap API spend (e.g. `--max-budget-usd 0.50`) |
-| `--permission-mode plan` | Read-only planning mode — no writes or shell |
-| `--append-system-prompt "TEXT"` | Inject task-specific instructions |
+| `--permission-mode plan` | Read-only planning mode — no writes or shell, overrides `--allowedTools` |
+| `--append-system-prompt "TEXT"` | Inject task-specific instructions into the system prompt |
+
+## Model Selection
+
+| Task | Flag |
+|------|-------|
+| Quick question, analysis | `--model claude-haiku-4-5` |
+| Complex fix, multi-step | `--model sonnet` |
+| Highest quality reasoning | `--model opus` |
+
+Use short aliases (`sonnet`, `opus`) for the latest version, or full IDs (e.g. `claude-sonnet-4-6`) to pin a specific model.
 
 ## Invocation Patterns
 
@@ -77,6 +78,13 @@ claude -p "[delegation prompt]" --output-format text \
 ```
 
 **Write delegation (fix, implement):**
+```bash
+claude -p "[delegation prompt]" --output-format text \
+  --allowedTools "Read" "Edit" \
+  --no-session-persistence
+```
+
+**Write delegation + shell (runs commands):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
   --allowedTools "Read" "Edit" "Bash(git *)" \
