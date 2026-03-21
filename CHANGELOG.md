@@ -2,7 +2,7 @@
 
 All notable changes to xFlow will be documented here.
 
-## [0.4.0] — 2026-03-19
+## [0.4.0-beta] — 2026-03-19
 
 ### Added
 - `skills/claude-cli/SKILL.md` — programmatic reference for the Claude CLI; covers `claude -p` flags, tool permission syntax (`--allowedTools`, `--disallowedTools`, `--tools`), model selection, budget caps, and common invocation patterns for ask/suggest/explain/fix/review tasks
