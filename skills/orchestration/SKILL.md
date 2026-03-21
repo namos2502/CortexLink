@@ -33,26 +33,42 @@ CONTROL CENTER (your AI agent — decomposes, routes, reviews)
 
 The control center IS your active AI agent — it holds the plan and directs the work. Each Agent is a full CLI agent in its own right, not a dumb executor. It can use its own platform-native tools and sub-agents internally to complete the task. The tree is one level deep: Agents are peers, they don't chain to each other. Width scales as you add agents; depth stays fixed.
 
+## Task Complexity
+
+Classify every task before routing. This determines how much spec detail to write and whether a Q&A phase is needed.
+
+| Level | Signals | Delegation style |
+|-------|---------|-----------------|
+| **Simple** | Single operation, read-only, unambiguous output (a list, a status, a count) | Handle inline — no cross-CLI |
+| **Standard** | 2–4 operations, may write, clear success criteria, low rework cost | Full spec: problem + acceptance criteria |
+| **Complex** | 5+ operations, writes/commits/PRs, judgment calls, OR high rework cost if misunderstood | Full spec + Q&A turn before execution |
+
+**Key signal for Complex:** rework cost. If the agent misunderstands and you must redo the work — how expensive is that? Tasks with irreversible steps (PRs, commits, deploys) or required judgment calls always qualify.
+
 ## When to Delegate Cross-CLI
 
 **Delegate when:**
 1. **Platform-specific** — GitHub ops (PRs, repos, Actions) → Copilot; Anthropic reasoning or Claude-specific model → Claude CLI
 2. **Context isolation** — offload a long subtask so its intermediate work never enters your context (the final result DOES return via stdout)
 3. **Different model needed** — the target CLI runs a model the host cannot
+4. Task is **Standard or Complex** — the work inside the agent justifies the delegation overhead
 
 **Do NOT delegate when:**
 1. Task needs your current session context, open files, or in-memory state
 2. The host has a native subagent that can handle it
 3. The target CLI is not installed or not authenticated
 4. You have no clear reason — "big task" is not a reason
+5. Task is **Simple** — handle inline or use a native subagent; a full agent session costs more than the task itself
 
 **Decision tree:**
 ```
 New task →
-  Platform-specific? YES → cross-CLI
-  Context isolation / different model? YES → cross-CLI
-  Host native subagent available? YES → use it (faster, no auth needed)
-  Default → handle in current context
+  Simple (single op, read-only, unambiguous result)? → handle inline
+  Needs exploration, no platform CLI required? → native subagent
+  Standard + platform-specific? → cross-CLI with full spec
+  Complex + platform-specific? → cross-CLI with full spec + Q&A turn
+  Produces verbose output AND needs agent reasoning? → cross-CLI
+  Default → handle inline
 ```
 
 ## Control Center Protocol
@@ -79,6 +95,15 @@ New task →
 ```
 
 Keep prompts lean. No project dumps.
+
+**For Complex tasks only**, append this block to the delegation prompt before the report format:
+
+```
+[Before executing]: This task is complex. In your first response, list any questions
+or ambiguities — 1 turn only. Do not perform any actions until I confirm.
+```
+
+The agent surfaces questions, you refine the spec if needed, then issue the execution follow-up.
 
 ## Structured Report Format
 
