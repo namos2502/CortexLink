@@ -88,6 +88,9 @@ Redirect stderr if needed: add `2>/dev/null`
 
 Follow the template from `skills/orchestration/SKILL.md`. Include the structured report format instructions at the end of every prompt.
 
+⛔ **Critical:** Always include this exact line in your delegation prompt:
+*"Return ONLY the structured report. No reasoning steps, no 'Let me...' output before the report."*
+
 ## Handling the Report
 
 The agent's stdout is its report. Capture it directly:
@@ -102,7 +105,7 @@ Read STATUS first. If ⚠️ or ❌, read ISSUES before deciding next action.
 | Failure | Action |
 |---------|--------|
 | Command not found | Tell user: `brew install copilot-cli` |
-| Auth failure / no output | Tell user: `copilot login` then re-run `/xflow:setup` |
+| Auth failure / no output | Tell user: `copilot login` then re-run `/cortexlink:setup` |
 | Unexpected output format | Retry once. If still malformed, handle the task natively. |
 
 ## Chaining
