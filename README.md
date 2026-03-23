@@ -36,7 +36,7 @@ No context bloat. No manual coordination. The workflow just happens.
 
 **Stay in flow.** Your active CLI knows how to route tasks, which agent to use, and how to handle the results — without you managing it.
 
-**Reduce your token spend.** Every delegated subtask runs in a separate subprocess. Only the final report comes back into your context — no reasoning chains, no intermediate tool calls.
+**Reduce your token spend.** Every delegated subtask runs in a separate subprocess. Only the final result comes back into your context — no reasoning chains, no intermediate tool calls.
 
 ## Get started
 
