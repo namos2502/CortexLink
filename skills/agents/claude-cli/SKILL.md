@@ -66,11 +66,22 @@ Shell access (`Bash(...)`) is a separate, deliberate decision. Use `--disallowed
 
 Use short aliases (`sonnet`, `opus`) for the latest version, or full IDs (e.g. `claude-sonnet-4-6`) to pin a specific model.
 
+## Working Directory
+
+Claude CLI is sandboxed to its working directory — the same restriction as Copilot CLI.
+
+⛔ **Always invoke from the repo root.** Use `--cwd` or `cd` before invoking.
+
+```bash
+claude -p "..." --cwd $(git rev-parse --show-toplevel) --output-format text ...
+```
+
 ## Invocation Patterns
 
 **Read-only delegation (question, analysis):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" --model claude-haiku-4-5 \
   --no-session-persistence --max-turns 3
 ```
@@ -78,6 +89,7 @@ claude -p "[delegation prompt]" --output-format text \
 **Write delegation (fix, implement):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" "Edit" "Write" \
   --no-session-persistence
 ```
@@ -85,6 +97,7 @@ claude -p "[delegation prompt]" --output-format text \
 **Write delegation + shell (runs commands):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" "Edit" "Bash(git *)" \
   --no-session-persistence
 ```
@@ -92,12 +105,14 @@ claude -p "[delegation prompt]" --output-format text \
 **Planning / analysis only (no writes):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
   --permission-mode plan --no-session-persistence --max-turns 5
 ```
 
 **Piped input:**
 ```bash
 cat file.ts | claude -p "[delegation prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" --no-session-persistence
 ```
 
@@ -116,7 +131,9 @@ Follow the template from `skills/orchestration/SKILL.md`. Include the structured
 
 The agent's stdout is its report. Capture it directly:
 ```bash
-REPORT=$(claude -p "[prompt]" --output-format text --allowedTools "Read" --no-session-persistence 2>/dev/null)
+REPORT=$(claude -p "[prompt]" --output-format text \
+  --cwd $(git rev-parse --show-toplevel) \
+  --allowedTools "Read" --no-session-persistence 2>/dev/null)
 ```
 
 Read STATUS first. If ⚠️ or ❌, read ISSUES before deciding next action.
@@ -126,8 +143,8 @@ Read STATUS first. If ⚠️ or ❌, read ISSUES before deciding next action.
 | | Copilot CLI | Claude CLI |
 |--|-------------|------------|
 | Tool permissions | `--allow-tool='write, read'` | `--allowedTools "Read" "Edit"` |
-| Silence | `-s` | `--output-format text` |
 | Prevent questions | `--no-ask-user` | implied by `-p` |
+| Working directory | `--cwd PATH` | `--cwd PATH` |
 | Model flag | `--model=claude-haiku-4.5` | `--model claude-haiku-4-5` |
 
 ## Error Handling

@@ -2,6 +2,16 @@
 
 All notable changes to CortexLink will be documented here.
 
+## [0.5.6] — 2026-03-23
+
+### Fixed
+- Removed `-s` flag from all Copilot CLI invocation patterns — causes exit code 1, not a valid flag for programmatic use
+- Copilot CLI sandbox fix: no `--cwd` flag exists; all invocations now `cd` to repo root first (`cd $(git rev-parse --show-toplevel) &&`) — prevents silent file access failures under `--no-ask-user` when invoked from a subdirectory
+- `--allow-tool` values corrected to no-space format (`'write,read'`, `'write,shell(git:*),read'`)
+- Model updated to `--model=claude-sonnet-4-5` for real tasks (was "omit"); `--model=claude-haiku-4.5` kept for availability checks only
+- Claude CLI: added `--cwd $(git rev-parse --show-toplevel)` to all invocation patterns — same sandbox restriction applies
+- Orchestration detection command: removed `-s`, added `cd` to repo root
+
 ## [0.5.5] — 2026-03-23
 
 ### Changed
