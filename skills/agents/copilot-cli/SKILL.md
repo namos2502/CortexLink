@@ -104,10 +104,19 @@ Redirect stderr if needed: add `2>/dev/null`
 
 ## Delegation Prompt
 
-Follow the template from `skills/orchestration/SKILL.md`. Include the structured report format instructions at the end of every prompt.
+Copilot CLI has no `--append-system-prompt` flag, so CortexLink agent context must be prepended to every delegation prompt. **Always open every delegation prompt with this block:**
 
-⛔ **Critical:** Always include this exact line in your delegation prompt:
-*"Return ONLY the structured report. No reasoning steps, no 'Let me...' output before the report."*
+```
+You are operating as a CortexLink agent. Your output is consumed directly by a control center — not displayed to a user. Execute the task, verify your own work (Execute → Verify → fix if needed → Report), then return ONLY the structured report below. No reasoning steps, no "Let me..." output before the report.
+
+---
+
+[Task]: ...
+```
+
+The report format goes at the end (from the delegation template). The opening block teaches the agent the protocol — the closing block specifies this task's expected output.
+
+⛔ **Critical:** Never omit the opening CortexLink agent context block. Without it, Copilot CLI has no way to learn the report format or self-verify protocol.
 
 ## Handling the Report
 

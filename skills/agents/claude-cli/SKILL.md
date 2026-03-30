@@ -78,12 +78,19 @@ claude -p "..." --cwd $(git rev-parse --show-toplevel) --output-format text ...
 
 ## Invocation Patterns
 
+Always include `--append-system-prompt` with the CortexLink agent context below. This teaches the agent the report format and self-verify protocol via the system prompt — separate from the task prompt.
+
+```
+CORTEXLINK_AGENT_CONTEXT="You are operating as a CortexLink agent. Your output is consumed directly by a control center. Execute the task, verify your own work (Execute → Verify → fix if needed → Report), then return ONLY this structured report — plain text labels, no bold, no headers:\nSTATUS: ✅ Verified / ⚠️ Partial / ❌ Failed\nSUMMARY: <1-2 sentences>\nSTEPS:\n  - <step>\nFILES: <changed files or none>\nISSUES: <notes or none>\nMax 150 words. Never mark ✅ without actually checking. For analysis tasks, ✅ = completed the analysis even if you cannot run the code."
+```
+
 **Read-only delegation (question, analysis):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" --model claude-haiku-4-5 \
-  --no-session-persistence --max-turns 3
+  --no-session-persistence --max-turns 3 \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT"
 ```
 
 **Write delegation (fix, implement):**
@@ -91,7 +98,8 @@ claude -p "[delegation prompt]" --output-format text \
 claude -p "[delegation prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" "Edit" "Write" \
-  --no-session-persistence
+  --no-session-persistence \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT"
 ```
 
 **Write delegation + shell (runs commands):**
@@ -99,21 +107,24 @@ claude -p "[delegation prompt]" --output-format text \
 claude -p "[delegation prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
   --allowedTools "Read" "Edit" "Write" "Bash(git *)" \
-  --no-session-persistence
+  --no-session-persistence \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT"
 ```
 
 **Planning / analysis only (no writes):**
 ```bash
 claude -p "[delegation prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
-  --permission-mode plan --no-session-persistence --max-turns 5
+  --permission-mode plan --no-session-persistence --max-turns 5 \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT"
 ```
 
 **Piped input:**
 ```bash
 cat file.ts | claude -p "[delegation prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
-  --allowedTools "Read" --no-session-persistence
+  --allowedTools "Read" --no-session-persistence \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT"
 ```
 
 ## Delegation Prompt
