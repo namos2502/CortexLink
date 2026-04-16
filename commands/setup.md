@@ -33,7 +33,7 @@ Then ask the user to re-run `/cortexlink:setup` after installing at least one ag
 
 For Copilot CLI (if installed):
 ```bash
-copilot -p "ping" -s --no-ask-user --no-auto-update --no-color --allow-tool='read' --model=claude-haiku-4.5 2>/dev/null
+copilot -p "ping" --no-ask-user --no-auto-update --no-color --allow-tool='read' --model=claude-haiku-4.5 2>/dev/null
 ```
 If this fails, tell the user to run `copilot login`.
 

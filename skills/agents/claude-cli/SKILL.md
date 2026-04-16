@@ -148,7 +148,8 @@ The agent's stdout is its report. Capture it directly:
 ```bash
 REPORT=$(claude -p "[prompt]" --output-format text \
   --cwd $(git rev-parse --show-toplevel) \
-  --allowedTools "Read" --no-session-persistence 2>/dev/null)
+  --allowedTools "Read" --no-session-persistence \
+  --append-system-prompt "$CORTEXLINK_AGENT_CONTEXT" 2>/dev/null)
 ```
 
 Read STATUS first. If ⚠️ or ❌, read ISSUES before deciding next action.
