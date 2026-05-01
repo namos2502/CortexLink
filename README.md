@@ -40,7 +40,7 @@ No context bloat. No manual coordination. The workflow just happens.
 
 ## Prerequisites
 
-- **Claude Code v1.0.33+** — CortexLink is a Claude Code plugin
+- **Claude Code** — CortexLink is a Claude Code plugin
 - **At least one supported CLI agent** installed and authenticated (see Get started below)
 
 ## Get started
