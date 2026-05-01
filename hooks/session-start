@@ -32,9 +32,6 @@ ${peer_direction}
 # top-level "additionalContext" field, not Claude Code's nested hookSpecificOutput.
 # Emitting both fields would cause double injection in Claude Code.
 #
-# Note: Cursor support via hooks.json is not currently implemented — hooks.json uses
-# ${CLAUDE_PLUGIN_ROOT} which is not set in Cursor's environment.
-#
 # jq is used to build JSON to safely handle %, \, ", and all control characters.
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
     jq -n --arg ctx "$session_context" \
